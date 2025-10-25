@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "563086392664",
+    "project_id": "crm-production-af45e",
+    "storage_bucket": "crm-production-af45e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563086392664:android:d67a1eb84942ba73c4f92d",
+        "android_client_info": {
+          "package_name": "com.crmmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB-udBmxKcb7KbLO8-96RSxfJgjQUjOu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
