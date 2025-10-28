@@ -16,6 +16,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import LocationScreen from './src/screens/LocationScreen';
 import CallLogsScreen from './src/screens/CallLogsScreen';
 import TopContactsScreen from './src/screens/TopContactsScreen';
+import AppHeader from './src/screens/AppHeaders';
 
 //actual screens
 import LocationsScreen from './src/screens/Locations';
@@ -55,12 +56,32 @@ const MainTabs = () => {
         },
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: 'gray',
-        headerShown: false
+        headerShown: true,
+        // Use custom header component for all screens
+        header: () => <AppHeader/>,
       })}
     >
-      <Tab.Screen name="Locatii" component={LocationsScreen} />
-      <Tab.Screen name="Acasa" component={HomeScreen} />
-      <Tab.Screen name="Vizite" component={VisitsScreen} />
+      <Tab.Screen 
+        name="Locatii" 
+        component={LocationsScreen}
+        options={{
+          header: () => <AppHeader/>,
+        }}
+      />
+      <Tab.Screen 
+        name="Acasa" 
+        component={HomeScreen}
+        options={{
+          header: () => <AppHeader/>,
+        }}
+      />
+      <Tab.Screen 
+        name="Vizite" 
+        component={VisitsScreen}
+        options={{
+          header: () => <AppHeader/>,
+        }}
+      />
     </Tab.Navigator>
   );
 };

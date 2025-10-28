@@ -42,7 +42,7 @@ interface ConfigState {
 }
 
 const initialState: ConfigState = {
-  backendHostname : "10.0.2.2:5800"
+  backendHostname : "http://10.0.2.2:5800"
 };
 
 

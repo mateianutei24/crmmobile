@@ -7,6 +7,7 @@ import SectionTitle from './SectionTitle';
 import StatCard from './StatCard';
 // Replace this with your actual logo asset
 import { testRoute } from '../redux/slices/configSlice';
+import { getVisits } from '../redux/slices/actions/getVisits';
 
 interface ProgressBarProps {
   value: number; // 0 to 100
@@ -40,10 +41,10 @@ const HomeScreen: React.FC = () => {
   return (
     <View style={styles.content}>
       {/* Company Branding */}
-      <View style={styles.brandingRow}>
+      {/* <View style={styles.brandingRow}>
         <Image source={require("../assets/logo.png")} style={styles.logo} resizeMode="contain" />
         <Text style={styles.brandText}>CRM PRIMAGRA</Text>
-      </View>
+      </View> */}
 
       {/* User Info + Logout */}
       <View style={styles.userRow}>
@@ -74,7 +75,7 @@ const HomeScreen: React.FC = () => {
       <ProgressBar value={90} label="Numar minim de vizite fizice" />
       <ProgressBar value={74} label="Actualizarea bazei de date" />
         <TouchableOpacity onPress={()=>{
-          dispatch(testRoute());}
+          dispatch(getVisits());}
         }>
         <Text>TESTEAZA ROUTE</Text>
         </TouchableOpacity>
