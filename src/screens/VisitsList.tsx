@@ -6,11 +6,21 @@ import {
   StyleSheet,
   SafeAreaView,
   ListRenderItem,
+  TouchableOpacity,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import VisitScreen from '../interfaces/Visit'; // Your interface import
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import {
+  LoaderKitView,
+} from 'react-native-loader-kit';
+
+import { setPage } from '../redux/slices/visitsSlice';
+import { getVisits } from '../redux/slices/actions/getVisits';
+import { setSelectedVisitId } from '../redux/slices/visitsSlice';
+import { useNavigation } from '@react-navigation/native';
+
 
 // Helper function to get icon based on visit type
 const getVisitIcon = (tipVizita: string): string => {
@@ -44,8 +54,16 @@ interface VisitItemProps {
 const VisitItem: React.FC<VisitItemProps> = ({ visit }) => {
   const statusColor = visit.efectuata ? '#4CAF50' : '#F44336';
   const iconName = getVisitIcon(visit.tip_vizita);
-  
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation();
   return (
+    <TouchableOpacity onPress={() => {
+      dispatch(setSelectedVisitId(visit.visit_id));
+      // @ts-ignore
+      navigation.navigate('VisitDetails', {
+        visit: visit
+      });
+    }}>
     <View style={styles.visitCard}>
       <View style={styles.leftSection}>
         <View style={[styles.iconContainer, { backgroundColor: statusColor + '20' }]}>
@@ -82,6 +100,7 @@ const VisitItem: React.FC<VisitItemProps> = ({ visit }) => {
         </Text>
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 
@@ -89,8 +108,12 @@ const VisitItem: React.FC<VisitItemProps> = ({ visit }) => {
 
 // Main Visit List Component
 const VisitList: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const visits = useAppSelector ((state) => state.visits.visits);
-  
+  const loadingVisits = useAppSelector((state)=>state.visits.loading)
+  const page = useAppSelector((state) => state.visits.page)
+  const hasMore = useAppSelector((state) => state.visits.hasMore)
   const renderItem: ListRenderItem<VisitScreen> = ({ item }) => <VisitItem visit={item} />;
   
   const keyExtractor = (item: VisitScreen) => item.visit_id;
@@ -111,7 +134,21 @@ const VisitList: React.FC = () => {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={ListEmptyComponent}
         showsVerticalScrollIndicator={false}
+        onEndReached={() => {
+          if(loadingVisits == false && hasMore == true){
+              dispatch(setPage(page+1));
+              dispatch(getVisits())
+          }
+      }}
+      onEndReachedThreshold={0.3}
       />
+      {loadingVisits? <LoaderKitView
+      style={{ width: 50, height: 50, alignSelf: "center" }}
+      name={'BallPulse'}
+      animationSpeedMultiplier={1.0} 
+      color={'grey'} 
+      />:null}
+      
     </SafeAreaView>
   );
 };

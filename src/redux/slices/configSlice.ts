@@ -41,8 +41,10 @@ interface ConfigState {
   backendHostname: string
 }
 
+// "http://10.0.2.2:5800"
+// "https://europe-central2-crm-production-af45e.cloudfunctions.net/backCrm"
 const initialState: ConfigState = {
-  backendHostname : "http://10.0.2.2:5800"
+  backendHostname : "https://europe-central2-crm-production-af45e.cloudfunctions.net/backCrm"
 };
 
 

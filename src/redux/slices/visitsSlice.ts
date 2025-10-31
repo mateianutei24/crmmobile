@@ -9,13 +9,21 @@ interface VisitsState {
   helperDate: Date|null;
   companyName:string|undefined;
   hasMore: boolean;
+  page: number;
+  loading:boolean;
+  selectedVisitId : string | null;
+  selectedVisit: null;
 }
 
 const initialState: VisitsState = {
   visits: [],
   helperDate:null,
   companyName:undefined,
-  hasMore: false
+  hasMore: false,
+  page : 1,
+  loading: false,
+  selectedVisitId: null,
+  selectedVisit : null,
 };
 
 
@@ -32,16 +40,30 @@ const visitsSlice = createSlice({
     },
     setCompanyName: (state,action) => {
       state.companyName= action.payload
+    },
+    setPage:(state,action) => {
+      state.page = action.payload
+    },
+    resetList : (state,action) => {
+      state.hasMore = false,
+      state.page = 1;
+      state.visits = [];
+    },
+    setSelectedVisitId : (state,action) => {
+      state.selectedVisitId = action.payload;
+    },
+    clearSelectedVisit : (state,action) => {
+      state.selectedVisit = null;
+      state.selectedVisitId = null;
     }
   },
   extraReducers: (builder) => {
     // Fetch Call Logs
     builder
       .addCase(getVisits.pending, (state) => {
-        console.log("GET VISITS PENDING")
+        state.loading = true;
       })
       .addCase(getVisits.fulfilled, (state, action) => {
-        console.log("GET VISITS FULFILLED")
         
         let payload : GetObjectsResponse= action.payload as unknown as GetObjectsResponse;
         let visits: VisitScreen[] = [];
@@ -51,28 +73,41 @@ const visitsSlice = createSlice({
         
           data.forEach((visit:Vizita) => {
             visits.push({
-              visit_id : visit.vizita_id,
-             companie: visit.Companie.companie_denumire,
+            visit_id : visit.vizita_id,
+            companie: visit.Companie.companie_denumire,
             tip_vizita: visit.TipVizita.nume_tip_vizita,
             efectuata: visit.efectuata, // e.g. "egal cu"
-            data_limita: visit.data_limita
+            data_limita: visit.data_limita,
+            locatie_verificata: visit.locatie_verificata,
+            locatie: visit.locatie_valoare
             })
           })
           
-          state.visits = visits
+          if(state.visits.length > 0){
+            let visitsTemp = (state.visits as VisitScreen[]).concat(visits);
+            state.visits = visitsTemp
+          }else{
+            state.visits = visits
+          }
+         
 
           if(payload.hasMore){
             state.hasMore = true
           }else{
             state.hasMore= false;
           }
+
+          state.loading = false;
         }
       })
       .addCase(getVisits.rejected, (state, action) => {
-        console.log("GET VISITS REJECTED")
+        state.loading = false;
       });
   },
 });
 
-export const { clearVisits, setHelperDate, setCompanyName } = visitsSlice.actions;
+export const { clearVisits, setHelperDate, setCompanyName,setPage,resetList, setSelectedVisitId,
+  clearSelectedVisit
+
+ } = visitsSlice.actions;
 export default visitsSlice.reducer;

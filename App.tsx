@@ -22,6 +22,10 @@ import AppHeader from './src/screens/AppHeaders';
 import LocationsScreen from './src/screens/Locations';
 import VisitsScreen from './src/screens/Visits';
 
+import VisitsStack from './src/components/visitsNavigation';
+
+
+
 // Create navigators
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -77,7 +81,7 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="Vizite" 
-        component={VisitsScreen}
+        component={VisitsStack}
         options={{
           header: () => <AppHeader/>,
         }}

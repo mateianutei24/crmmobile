@@ -48,7 +48,7 @@ export const getVisits= createAsyncThunk<
 
     let helperDate = getState().visits.helperDate;
     let companyName = getState().visits.companyName;
-
+    let page = getState().visits.page;
     let conditions: FilterCondition[] = [];
 
     if(helperDate != null){
@@ -90,7 +90,7 @@ export const getVisits= createAsyncThunk<
     }
 
     var url:string =`${backendHostname}/vizite/pagination?page=${
-        1
+        page
       }&limit=${
         20
       }&conditions=${JSON.stringify(conditions)}`

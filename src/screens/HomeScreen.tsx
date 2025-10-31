@@ -74,11 +74,7 @@ const HomeScreen: React.FC = () => {
       <ProgressBar value={60} label="Realizare numar minim vizite" />
       <ProgressBar value={90} label="Numar minim de vizite fizice" />
       <ProgressBar value={74} label="Actualizarea bazei de date" />
-        <TouchableOpacity onPress={()=>{
-          dispatch(getVisits());}
-        }>
-        <Text>TESTEAZA ROUTE</Text>
-        </TouchableOpacity>
+
       {/* <SectionTitle title='Prospectare de piata' iconName='trending-up'/>
       <ProgressBar value={44} label="Actualizarea bazei de date" /> */}
     </View>

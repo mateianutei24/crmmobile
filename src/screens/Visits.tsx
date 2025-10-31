@@ -1,12 +1,21 @@
-import React, { useState, useCallback } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, TextInput, SafeAreaView } from 'react-native';
+import React, { useState, useCallback, useRef } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, TextInput, SafeAreaView, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+
+import { DatePicker } from "@s77rt/react-native-date-picker";
+import type { DatePickerHandle } from "@s77rt/react-native-date-picker";
+
 import MonthPicker from 'react-native-month-year-picker';
+
+
 import { getVisits } from '../redux/slices/actions/getVisits';
 
-import { setHelperDate,setCompanyName } from '../redux/slices/visitsSlice';
+import { setHelperDate,setCompanyName, resetList } from '../redux/slices/visitsSlice';
 import VisitList from './VisitsList';
+
+
+
 
 const VisitsScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -14,7 +23,15 @@ const VisitsScreen: React.FC = () => {
   
   const [date, setDate] = useState<Date | null>(new Date());
   const [show, setShow] = useState<boolean>(false);
+
+
   const [textValue, setTextValue] = useState<string>('');
+
+
+
+  const datePicker = useRef<DatePickerHandle>(null);
+	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
 
 
   const helperDate = useAppSelector((state)=>state.visits.helperDate);
@@ -51,48 +68,42 @@ const VisitsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.content}>
       <Text style={styles.label}>Selecteaza luna</Text>
-      <View style={styles.pickerContainer}>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => showPicker(true)}
-        >
-          <Text style={styles.dateButtonText}>
-            {formatMonthYear(helperDate)}
-          </Text>
-        </TouchableOpacity>
-        {helperDate && (
-          <TouchableOpacity
-            style={styles.clearButton}
-            onPress={handleClear}
-          >
-            <Text style={styles.clearButtonText}>Clear</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {show && (
-        <MonthPicker
-          onChange={(event,newDate)=>{
-          console.log("NEW DATE");
-          console.log(newDate)
-          showPicker(false);
-          dispatch(setHelperDate(newDate))
-          dispatch(getVisits());
+    <>
+		<View>
+	<TouchableOpacity
+    style={styles.outlinedButton}
+    onPress={() => datePicker.current?.showPicker()}
+  >
+  <Text style={styles.outlinedButtonText}>
+    {helperDate
+      ? helperDate.toLocaleDateString('ro-RO', {
+          month: 'long',
+          year: 'numeric',
+        })
+      : 'Selectează luna'}
+  </Text>
+    </TouchableOpacity>
+				<DatePicker
+					ref={datePicker}
+					type="yearmonth"
+					value={helperDate}
+					onChange={(value)=>{
+            dispatch(resetList({}));
+            dispatch(setHelperDate(value))
+            dispatch(getVisits())
           }}
-          value={helperDate || new Date()}
-          minimumDate={new Date(2020, 0)}
-          maximumDate={new Date(2030, 11)}
-          locale="en"
-        />
-      )}
+				/>
+			</View>
+		</>
 
-      <Text style={styles.label}>Introdu numele companiei </Text>
+      <Text style={styles.labelMarginTop}>Introdu numele companiei </Text>
       <TextInput
         style={styles.textInput}
         placeholder="Compania..."
         placeholderTextColor="#999"
         value={companyName}
         onChangeText={((text)=>{
+          dispatch(resetList({}));
           dispatch(setCompanyName(text))
           dispatch(getVisits());
         })}
@@ -115,6 +126,13 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 40,
     textAlign: 'center',
+  }, 
+  labelMarginTop: {
+    marginTop:16,
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
+    color: '#333',
   },
   label: {
     fontSize: 16,
@@ -159,6 +177,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginBottom: 20,
+  },
+  outlinedButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  outlinedButtonText: {
+    fontSize: 16,
+    color: '#333',
+    textTransform: 'capitalize', // makes month names like "Ianuarie"
   },
 });
 

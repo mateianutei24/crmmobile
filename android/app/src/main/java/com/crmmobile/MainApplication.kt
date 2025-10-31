@@ -8,6 +8,7 @@ import com.facebook.react.ReactNativeApplicationEntryPoint.loadReactNative
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.crmmobile.CallLogsPackage
 
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactHost: ReactHost by lazy {
